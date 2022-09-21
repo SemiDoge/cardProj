@@ -4,22 +4,22 @@
 #include <fmt/format.h>
 #include <fmt/color.h>
 #include <cxxopts.hpp>
-#include <SDL/SDL.h>
+
+#include "../inc/cardproj.h"
 
 void printVersion();
 cxxopts::ParseResult setUpWorkflow(int argc, char** argv, cxxopts::Options & options);
 
 int main (int argc, char** argv) {
     cxxopts::Options options("test", "This is a starter CMake/Conan C++ project.\n");
-
+    CPWindow appWindow(620, 480);
+    
     auto optRes = setUpWorkflow(argc, argv, options);
 
-    fmt::print("{}",
-            fmt::styled("This is a starter CMake/Conan C++ project.\n",
-            fmt::fg(fmt::color::green)));
+    auto ret = appWindow.OnExecute();
 
-    
-    return EXIT_SUCCESS;
+    fmt::print("NOTE: OnExecute returned: {}\n", ret);
+    return ret;
 }
 
 cxxopts::ParseResult setUpWorkflow(int argc, char** argv, cxxopts::Options & options) {
