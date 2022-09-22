@@ -14,7 +14,7 @@ void log(std::string msg, logSeverity severity) {
         logPrefix.append("[INFO]");
         break;
         case logSeverity::TRACE:
-        style = fmt::fg(fmt::color::green_yellow);
+        style = fmt::fg(fmt::color::purple);
         logPrefix.append("[TRACE]");
         break;
         case logSeverity::DEBUG:
@@ -23,5 +23,5 @@ void log(std::string msg, logSeverity severity) {
         break;
     }
 
-    fmt::print("{} {}", fmt::styled(logPrefix, style), msg);
+    fmt::print("{} {}\n", fmt::styled(logPrefix, style), msg);
 }

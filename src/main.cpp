@@ -11,13 +11,13 @@ cxxopts::ParseResult setUpWorkflow(int argc, char** argv, cxxopts::Options & opt
 int main (int argc, char** argv) {
     cxxopts::Options options("cardproj", "This simple program will eventually render two playing cards to the screen.\n");
     auto optRes = setUpWorkflow(argc, argv, options);
-    CPWindow appWindow(620, 480);
+    CPWindow appWindow(1240, 600);
     
 
-    log("Starting SDL object\n", logSeverity::INFO);
+    log("Starting SDL object", logSeverity::INFO);
     auto ret = appWindow.OnExecute();
     
-    log(fmt::format("OnExecute returned {}\n", ret), logSeverity::INFO);
+    log(fmt::format("OnExecute returned {} at frame#{}", ret, appWindow.iFrame), logSeverity::INFO);
     return ret;
 }
 
