@@ -2,24 +2,30 @@
 #define CARDPROJ_H
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <fmt/format.h>
+#include <iostream>
 
 class CPWindow {
-    private:
-        bool bRunning;
-        SDL_Window * sdlWindow;
-        int iWindowWidth = 0; // 620x480 shall be the default will get overridden
-        int iWindowHeight = 0;
+private:
+    bool bRunning;
+    int iWindowWidth = 0;
+    int iWindowHeight = 0;
 
-    public:
-        CPWindow(int iWindowWidth, int iWindowHeight);
-        int OnExecute();
+    SDL_Window * sdlWindow;
+    SDL_Renderer * sdlRenderer;
 
-    public:
-        bool OnInit();
-        void OnEvent(SDL_Event * event);
-        void OnLoop();
-        void OnRender();
-        void OnCleanup();
+public:
+    CPWindow(int iWindowWidth, int iWindowHeight);
+    ~CPWindow();
+    int OnExecute();
+
+public:
+    bool OnInit();
+    void OnEvent(SDL_Event * event);
+    void OnLoop();
+    void OnRender();
+    void OnCleanup();
 };
 
 #endif
