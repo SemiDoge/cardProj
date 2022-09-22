@@ -1,8 +1,6 @@
 #define FMT_HEADER_ONLY
 
 #include <iostream>
-#include <fmt/format.h>
-#include <fmt/color.h>
 #include <cxxopts.hpp>
 
 #include "../inc/cardproj.h"
@@ -11,14 +9,15 @@ void printVersion();
 cxxopts::ParseResult setUpWorkflow(int argc, char** argv, cxxopts::Options & options);
 
 int main (int argc, char** argv) {
-    cxxopts::Options options("test", "This is a starter CMake/Conan C++ project.\n");
+    cxxopts::Options options("cardproj", "This simple program will eventually render two playing cards to the screen.\n");
+    auto optRes = setUpWorkflow(argc, argv, options);
     CPWindow appWindow(620, 480);
     
-    auto optRes = setUpWorkflow(argc, argv, options);
 
+    log("Starting SDL object\n", logSeverity::INFO);
     auto ret = appWindow.OnExecute();
-
-    fmt::print("NOTE: OnExecute returned: {}\n", ret);
+    
+    log(fmt::format("OnExecute returned {}\n", ret), logSeverity::INFO);
     return ret;
 }
 
@@ -45,5 +44,5 @@ cxxopts::ParseResult setUpWorkflow(int argc, char** argv, cxxopts::Options & opt
 }
 
 void printVersion() {
-    fmt::print("TEST VERSION {}\n", fmt::styled("0.1", fmt::fg(fmt::color::red)));
+    fmt::print("cardproj VERSION {}\n", fmt::styled("0.2", fmt::fg(fmt::color::orange_red)));
 }

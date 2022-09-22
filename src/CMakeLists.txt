@@ -6,7 +6,7 @@ conan_basic_setup()
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(SOURCES main.cpp cardproj.cpp)
+set(SOURCES main.cpp cardproj.cpp logging.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC ../inc/)
