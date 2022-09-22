@@ -52,13 +52,13 @@ bool CPWindow::OnInit() {
     
     bRunning = true;
 
-    fmt::print("[INFO] Successful SDL Initialization\n");
+    log("Successful SDL Initialization\n", logSeverity::INFO);
     return true;
 }
 
 void CPWindow::OnEvent(SDL_Event * event) {  
 
-    //fmt::print("SDL_Event seen!\n");
+    //log("SDL_Event seen!\n");
     switch(event->type) {
         case SDL_QUIT:
             bRunning = false;
@@ -89,7 +89,7 @@ void CPWindow::OnRender() {
 }
 
 void CPWindow::OnCleanup() {
-    fmt::print("[INFO] Starting SDL cleanup\n");
+    log("Starting SDL cleanup\n", logSeverity::INFO);
     SDL_DestroyWindow(sdlWindow);
     SDL_Quit();
 }
