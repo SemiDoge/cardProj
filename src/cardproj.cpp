@@ -9,15 +9,32 @@ CPWindow::CPWindow(int iWindowWidth, int iWindowHeight) {
 }
 
 CPWindow::~CPWindow() {
-
+    for (auto itr : vecEntities) {
+        delete itr;
+    }
 }
 
 int CPWindow::OnExecute() {
     if(OnInit() == false) {
         return EXIT_FAILURE;
     }
+    
+    //TODO: Maybe temporary staging ground for entities?
 
-    textures.push_back(TextureManager::LoadTexture("res/cardStack.png", sdlRenderer));
+    vecEntities.push_back(
+        new Entity(TextureManager::LoadTexture("res/cardStack.png", sdlRenderer), 
+            32, 32, 32 - 12, 32 + 42, 14)
+    );
+
+    vecEntities.push_back(
+        new Entity(TextureManager::LoadTexture("res/cardFront.png", sdlRenderer),
+            32, 32, 32 + (12 * 35), 32 + 42, 14)
+    );
+    
+    vecEntities.push_back(
+        new Entity(TextureManager::LoadTexture("res/cardFront.png", sdlRenderer),
+            32, 32, 32 + (12 * 65), 32 + 42, 14)
+    );
 
     SDL_Event Event;
 
@@ -106,8 +123,8 @@ void CPWindow::OnRender() {
     SDL_RenderClear(sdlRenderer); //clear the previous frame
 
     //prepare next frame
-    for(auto itr : textures) {
-        SDL_RenderCopy(sdlRenderer, itr, NULL, NULL);
+    for(auto itr : vecEntities) {
+        SDL_RenderCopy(sdlRenderer, itr->GetTexture(), NULL, itr->GetDestRect());
     }
 
     //present new frame
