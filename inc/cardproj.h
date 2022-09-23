@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "../inc/textureManager.h"
+#include "../inc/entity.h"
 
 class CPWindow {
 private:
@@ -23,7 +24,7 @@ private:
     SDL_Window * sdlWindow;
     SDL_Renderer * sdlRenderer;
 
-    std::vector<SDL_Texture *> textures;
+    std::vector<Entity *> vecEntities;
     
 
 public:
