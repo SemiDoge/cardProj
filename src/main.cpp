@@ -14,7 +14,7 @@ int main (int argc, char** argv) {
     CPWindow appWindow(1240, 600);
     
 
-    log("Starting SDL object", logSeverity::INFO);
+    log("Starting SDL object...", logSeverity::INFO);
     auto ret = appWindow.OnExecute();
     
     log(fmt::format("OnExecute returned {} at frame#{}", ret, appWindow.iFrame), logSeverity::INFO);

@@ -1,6 +1,6 @@
 #include "../inc/cardproj.h"
 
-CPWindow::CPWindow(int iWindowWidth = 620, int iWindowHeight = 480) {
+CPWindow::CPWindow(int iWindowWidth, int iWindowHeight) {
     sdlWindow = nullptr;
     sdlRenderer = nullptr;
 
@@ -17,15 +17,26 @@ int CPWindow::OnExecute() {
         return EXIT_FAILURE;
     }
 
+    textures.push_back(TextureManager::LoadTexture("res/cardStack.png", sdlRenderer));
+
     SDL_Event Event;
 
     while(bRunning) {
+
+        iFrameStart = SDL_GetTicks();
+
         while(SDL_PollEvent(&Event)) {
             OnEvent(&Event);
         }
 
         OnLoop();
         OnRender();
+    
+        iFrameTime = SDL_GetTicks() - iFrameStart;
+    
+        if (iFrameDelay > iFrameTime) {
+            SDL_Delay(iFrameDelay - iFrameTime);
+        }
     }
 
     OnCleanup();
@@ -38,9 +49,17 @@ bool CPWindow::OnInit() {
         return false;
     }
 
+    if (IMG_Init(IMG_INIT_PNG) < 0) {
+       return false; 
+    }
+
+    log("Successful SDL_Image Initialization!", logSeverity::INFO);
+
     if ((sdlWindow = SDL_CreateWindow("Card Project", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, iWindowWidth, iWindowHeight, SDL_WINDOW_OPENGL)) == NULL) {
         return false;
     }
+
+    log(fmt::format("Created a {}x{} SDL_Window", iWindowWidth, iWindowHeight), logSeverity::INFO);
 
     if ((sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, 0)) == NULL) {
         return false;
@@ -52,13 +71,13 @@ bool CPWindow::OnInit() {
     
     bRunning = true;
 
-    log("Successful SDL Initialization\n", logSeverity::INFO);
+    log("Successful SDL Initialization!", logSeverity::INFO);
     return true;
 }
 
 void CPWindow::OnEvent(SDL_Event * event) {  
 
-    //log("SDL_Event seen!\n");
+    //log("SDL_Event seen!", logSeverity::INFO);
     switch(event->type) {
         case SDL_QUIT:
             bRunning = false;
@@ -80,16 +99,23 @@ void CPWindow::OnEvent(SDL_Event * event) {
 }
 
 void CPWindow::OnLoop() {
-    //SDL_Delay(9000);
+    iFrame++;
 }
 
 void CPWindow::OnRender() {
-    SDL_RenderClear(sdlRenderer);
+    SDL_RenderClear(sdlRenderer); //clear the previous frame
+
+    //prepare next frame
+    for(auto itr : textures) {
+        SDL_RenderCopy(sdlRenderer, itr, NULL, NULL);
+    }
+
+    //present new frame
     SDL_RenderPresent(sdlRenderer);
 }
 
 void CPWindow::OnCleanup() {
-    log("Starting SDL cleanup\n", logSeverity::INFO);
+    log("Starting SDL cleanup...", logSeverity::INFO);
     SDL_DestroyWindow(sdlWindow);
     SDL_Quit();
 }
