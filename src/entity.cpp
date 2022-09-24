@@ -14,7 +14,8 @@ Entity::Entity(SDL_Texture * sdlTexture, int w, int h, int xPos, int yPos, int i
 }
 
 Entity::~Entity() {
-
+   SDL_DestroyTexture(sdlTexture);
+   log(fmt::format("Destroying texture and Entity at x: {}, y: {}, scale: {}", sdlDestRect.x, sdlDestRect.y, iEntityScale), logSeverity::INFO);
 }
 
 bool Entity::GetIsClickable() {
