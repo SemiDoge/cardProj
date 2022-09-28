@@ -70,13 +70,13 @@ bool CPWindow::OnInit() {
        return false; 
     }
 
-    log("Successful SDL_Image Initialization!", logSeverity::INFO);
+    Logger::log("Successful SDL_Image Initialization!", logSeverity::INFO);
 
     if ((sdlWindow = SDL_CreateWindow("Card Project", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, iWindowWidth, iWindowHeight, SDL_WINDOW_OPENGL)) == NULL) {
         return false;
     }
 
-    log(fmt::format("Created a {}x{} SDL_Window", iWindowWidth, iWindowHeight), logSeverity::INFO);
+    Logger::log(fmt::format("Created a {}x{} SDL_Window", iWindowWidth, iWindowHeight), logSeverity::INFO);
 
     if ((sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, 0)) == NULL) {
         return false;
@@ -88,7 +88,7 @@ bool CPWindow::OnInit() {
     
     bRunning = true;
 
-    log("Successful SDL Initialization!", logSeverity::INFO);
+    Logger::log("Successful SDL Initialization!", logSeverity::INFO);
     return true;
 }
 
@@ -109,7 +109,6 @@ void CPWindow::OnEvent(SDL_Event * event) {
             }
         break;
         case SDL_MOUSEBUTTONDOWN:
-            //log(fmt::format("Mouse event seen @ ({}, {})", sdlPointMouseClick.x, sdlPointMouseClick.y), logSeverity::DEBUG);
             for(auto itr : vecEntities) {
                 if(itr->GetIsClickable() == true && itr->WasClicked(SDL_Point{event->button.x, event->button.y})) {
                     DrawRandomCards();
@@ -140,18 +139,17 @@ void CPWindow::OnRender() {
 }
 
 void CPWindow::OnCleanup() {
-    log("Starting SDL cleanup...", logSeverity::INFO);
+    Logger::log("Starting SDL cleanup...", logSeverity::INFO);
     SDL_DestroyWindow(sdlWindow);
     SDL_Quit();
 }
 
 void CPWindow::DrawRandomCards() {
-    size_t size = vecEntities.size();
+    playingCard card1, card2;
 
-    playingCard card1;
-    playingCard card2;
-
-    for (size_t i = 1; i < size; i++) {
+    //remove last set of randomised playing cards
+    for (size_t i = 1; i < vecEntities.size(); i++) {
+        delete vecEntities[i];
         vecEntities.pop_back();
     }
 
@@ -266,7 +264,7 @@ std::string CPWindow::GenerateResourceLocation(playingCard card) {
     }
 
     std::string ret = fmt::format("res/{}Cards/card{}{}.png", strSuit, strFace, strSuit);
-    log(fmt::format("New card uri {}", ret), logSeverity::INFO);
+    Logger::log(fmt::format("New card uri {}", ret), logSeverity::INFO);
 
     return ret;
 }
