@@ -9,16 +9,19 @@
 class Entity {
 private:
     int iEntityScale = 1;
-    bool bIsClickable = false;
+    bool bEntityIsClickable = false;
+    std::string strEntityLabel = "";
     SDL_Rect sdlDestRect;
     SDL_Texture * sdlTexture = nullptr;
 
 public:
-    Entity(SDL_Texture * sdlTexture, int w, int h, int xPos, int yPos, int iScale);
+    Entity(std::string strEntityLabel, SDL_Texture * sdlTexture, int w, int h, int xPos, int yPos, int iScale, bool bIsClickable);
     ~Entity();
 
 public:
     bool GetIsClickable();
+    bool WasClicked(SDL_Point pointClicked);
+    std::string GetEntityLabel;
     SDL_Rect * GetDestRect();
     SDL_Texture * GetTexture();
 

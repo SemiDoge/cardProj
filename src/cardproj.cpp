@@ -22,18 +22,18 @@ int CPWindow::OnExecute() {
     //TODO: Maybe temporary staging ground for entities?
 
     vecEntities.push_back(
-        new Entity(TextureManager::LoadTexture("res/cardStack.png", sdlRenderer), 
-            32, 32, 32 - 12, 32 + 42, 14)
+        new Entity("entyCardStack", TextureManager::LoadTexture("res/cardStack.png", sdlRenderer), 
+            32, 32, 32 - 12, 32 + 42, 14, true)
     );
 
     vecEntities.push_back(
-        new Entity(TextureManager::LoadTexture("res/cardFront.png", sdlRenderer),
-            32, 32, 32 + (12 * 35), 32 + 42, 14)
+        new Entity("entyFirstCard", TextureManager::LoadTexture("res/cardFront.png", sdlRenderer),
+            32, 32, 32 + (12 * 35), 32 + 42, 14, false)
     );
     
     vecEntities.push_back(
-        new Entity(TextureManager::LoadTexture("res/cardFront.png", sdlRenderer),
-            32, 32, 32 + (12 * 65), 32 + 42, 14)
+        new Entity("entySecondCard", TextureManager::LoadTexture("res/cardFront.png", sdlRenderer),
+            32, 32, 32 + (12 * 65), 32 + 42, 14, false)
     );
 
     SDL_Event Event;
@@ -109,6 +109,15 @@ void CPWindow::OnEvent(SDL_Event * event) {
                 break;
             }
         break;
+        case SDL_MOUSEBUTTONDOWN:
+            //log(fmt::format("Mouse event seen @ ({}, {})", sdlPointMouseClick.x, sdlPointMouseClick.y), logSeverity::DEBUG);
+            for(auto itr : vecEntities) {
+                if(itr->GetIsClickable() == true && itr->WasClicked(SDL_Point{event->button.x, event->button.y})) {
+                    //TODO: Add behaviour here that will run happen when an entity is clicked!
+                    break;
+                }
+            }
+            break;
         default:
             //event->type default
         break;

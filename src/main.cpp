@@ -17,12 +17,13 @@ int main (int argc, char** argv) {
     log("Starting SDL object...", logSeverity::INFO);
     auto ret = appWindow.OnExecute();
     
-    log(fmt::format("OnExecute returned {} at frame#{}", ret, appWindow.iFrame), logSeverity::INFO);
+    log(fmt::format("OnExecute() returned {} at frame#{}", ret, appWindow.iFrame), logSeverity::INFO);
     return ret;
 }
 
 cxxopts::ParseResult setUpWorkflow(int argc, char** argv, cxxopts::Options & options) {
 
+    //TODO: add an option to display/hide log output.
     options.add_options()
         ("v,version", "PRINT program version")
         ("h,help", "PRINT help text")
@@ -44,5 +45,5 @@ cxxopts::ParseResult setUpWorkflow(int argc, char** argv, cxxopts::Options & opt
 }
 
 void printVersion() {
-    fmt::print("cardproj VERSION {}\n", fmt::styled("0.2", fmt::fg(fmt::color::orange_red)));
+    fmt::print("cardproj VERSION {}\n", fmt::styled("0.3", fmt::fg(fmt::color::orange)));
 }
