@@ -1,6 +1,6 @@
 # cardProj - Isaiah Andrews
 
-<center>
+<p align="center">
     <img src="https://raw.githubusercontent.com/SemiDoge/cardProj/main/res/demoGIF.gif">
 </center>
 
@@ -17,7 +17,7 @@ This project is a demonstration of C++ and SDL2. Clicking on the stack of cards 
 
 ## Download
 
-> git clone https://github.com/SemiDoge/cardProj.git
+> $ git clone https://github.com/SemiDoge/cardProj.git
 
 ## Build
 
