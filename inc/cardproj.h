@@ -5,9 +5,29 @@
 #include <SDL2/SDL_image.h>
 #include <iostream>
 #include <vector>
+#include <random>
 
 #include "../inc/textureManager.h"
 #include "../inc/entity.h"
+
+enum faces {
+    Ace = 1, Two, Three, 
+    Four, Five, Six,
+    Seven, Eight, Nine, 
+    Ten, Jack, Queen,
+    King
+};
+
+enum suits {
+    Club = 1, Diamond,
+    Heart, Spade 
+};
+
+struct playingCard {
+    faces face;
+    suits suit;
+    SDL_Texture * sdlTexture = nullptr;
+};
 
 class CPWindow {
 private:
@@ -41,6 +61,10 @@ public:
     void OnLoop();
     void OnRender();
     void OnCleanup();
+
+public:
+    void DrawRandomCards();
+    std::string GenerateResourceLocation(playingCard card);
 };
 
 #endif
