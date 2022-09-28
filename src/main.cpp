@@ -45,5 +45,5 @@ cxxopts::ParseResult setUpWorkflow(int argc, char** argv, cxxopts::Options & opt
 }
 
 void printVersion() {
-    fmt::print("cardproj VERSION {}\n", fmt::styled("0.3", fmt::fg(fmt::color::orange)));
+    fmt::print("cardproj VERSION {}\n", fmt::styled("0.9", fmt::fg(fmt::color::orange)));
 }
