@@ -7,12 +7,12 @@ SDL_Texture * TextureManager::LoadTexture(const char * strFileName, SDL_Renderer
 
 
     if ((tmpSurface = IMG_Load(strFileName)) == NULL) {
-        log(fmt::format("Failed to create surface, reason: {}", IMG_GetError()), logSeverity::ERROR);
+        Logger::log(fmt::format("Failed to create surface, reason: {}", IMG_GetError()), logSeverity::ERROR);
         return NULL;
     }
 
     if((texture = SDL_CreateTextureFromSurface(sdlRenderer, tmpSurface)) == NULL) {
-        log(fmt::format("Failed to create texture from: {}", strFileName), logSeverity::ERROR);
+        Logger::log(fmt::format("Failed to create texture from: {}", strFileName), logSeverity::ERROR);
         SDL_FreeSurface(tmpSurface);
 
         return NULL;

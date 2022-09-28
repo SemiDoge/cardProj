@@ -11,12 +11,12 @@ Entity::Entity(std::string strEntityLabel, SDL_Texture * sdlTexture, int w, int 
 
     this->sdlTexture = sdlTexture;
     this->strEntityLabel = strEntityLabel;
-    log(fmt::format("Creating Entity '{}' @ ({}, {}), scale: {}", this->strEntityLabel, sdlDestRect.x, sdlDestRect.y, iEntityScale), logSeverity::INFO);
+    Logger::log(fmt::format("Creating Entity '{}' @ ({}, {}), scale: {}", this->strEntityLabel, sdlDestRect.x, sdlDestRect.y, iEntityScale), logSeverity::INFO);
 }
 
 Entity::~Entity() {
    SDL_DestroyTexture(sdlTexture);
-   log(fmt::format("Destroying texture and Entity '{}' @ ({}, {}), scale: {}", strEntityLabel, sdlDestRect.x, sdlDestRect.y, iEntityScale), logSeverity::INFO);
+   Logger::log(fmt::format("Destroying texture and Entity '{}' @ ({}, {}), scale: {}", strEntityLabel, sdlDestRect.x, sdlDestRect.y, iEntityScale), logSeverity::INFO);
 }
 
 bool Entity::GetIsClickable() {
@@ -25,7 +25,7 @@ bool Entity::GetIsClickable() {
 
 bool Entity::WasClicked(SDL_Point pointClicked) {
     if(SDL_PointInRect(&pointClicked, &sdlDestRect) == SDL_TRUE) {
-        log(fmt::format("Entity '{}' clicked @ ({},{})", strEntityLabel, pointClicked.x, pointClicked.y), logSeverity::INFO);
+        Logger::log(fmt::format("Entity '{}' clicked @ ({},{})", strEntityLabel, pointClicked.x, pointClicked.y), logSeverity::INFO);
         return true;
     }
 

@@ -9,24 +9,25 @@ void printVersion();
 cxxopts::ParseResult setUpWorkflow(int argc, char** argv, cxxopts::Options & options);
 
 int main (int argc, char** argv) {
-    cxxopts::Options options("cardproj", "This simple program will eventually render two playing cards to the screen.\n");
+    cxxopts::Options options("cardproj", 
+        "This project is a demonstration of C++ and SDL2. Clicking on the stack of cards on the left of the window will generate a random 'draw' of two playing cards.\n");
     auto optRes = setUpWorkflow(argc, argv, options);
     CPWindow appWindow(1240, 600);
     
 
-    log("Starting SDL object...", logSeverity::INFO);
+    Logger::log("Starting SDL object...", logSeverity::INFO);
     auto ret = appWindow.OnExecute();
     
-    log(fmt::format("OnExecute() returned {} at frame#{}", ret, appWindow.iFrame), logSeverity::INFO);
+    Logger::log(fmt::format("OnExecute() returned {} at frame#{}", ret, appWindow.iFrame), logSeverity::INFO);
     return ret;
 }
 
 cxxopts::ParseResult setUpWorkflow(int argc, char** argv, cxxopts::Options & options) {
 
-    //TODO: add an option to display/hide log output.
     options.add_options()
         ("v,version", "PRINT program version")
         ("h,help", "PRINT help text")
+        ("l,log", "Allow debug logging")
     ;
 
     auto result = options.parse(argc, argv);
@@ -41,9 +42,15 @@ cxxopts::ParseResult setUpWorkflow(int argc, char** argv, cxxopts::Options & opt
         exit(EXIT_SUCCESS);
     }
 
+    if (result.count("log")) {
+        Logger::setAllowedToPrint(true);
+    } else {
+        Logger::setAllowedToPrint(false);
+    }
+
     return result;
 }
 
 void printVersion() {
-    fmt::print("cardproj VERSION {}\n", fmt::styled("0.9", fmt::fg(fmt::color::orange)));
+    fmt::print("cardproj VERSION {}\n", fmt::styled("0.92", fmt::fg(fmt::color::orange)));
 }

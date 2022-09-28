@@ -1,6 +1,6 @@
 #include "../inc/logging.h"
 
-void log(std::string msg, logSeverity severity) {
+void Logger::log(std::string msg, logSeverity severity) {
     fmt::v9::text_style style;
     std::string logPrefix = "";
 
@@ -23,5 +23,11 @@ void log(std::string msg, logSeverity severity) {
         break;
     }
 
-    fmt::print("{} {}\n", fmt::styled(logPrefix, style), msg);
+    if (bAllowedToPrint == true) {
+        fmt::print("{} {}\n", fmt::styled(logPrefix, style), msg);
+    }
+}
+
+void Logger::setAllowedToPrint(bool bPrint) {
+   bAllowedToPrint = bPrint;
 }
