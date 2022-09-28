@@ -24,7 +24,6 @@ bool Entity::GetIsClickable() {
 }
 
 bool Entity::WasClicked(SDL_Point pointClicked) {
-    //return SDL_PointInRect(&pointClicked, &sdlDestRect);
     if(SDL_PointInRect(&pointClicked, &sdlDestRect) == SDL_TRUE) {
         log(fmt::format("Entity '{}' clicked @ ({},{})", strEntityLabel, pointClicked.x, pointClicked.y), logSeverity::INFO);
         return true;
