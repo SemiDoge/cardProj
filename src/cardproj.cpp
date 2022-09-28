@@ -149,7 +149,6 @@ void CPWindow::DrawRandomCards() {
 
     //remove last set of randomised playing cards
     for (size_t i = 1; i < vecEntities.size(); i++) {
-        delete vecEntities[i];
         vecEntities.pop_back();
     }
 
