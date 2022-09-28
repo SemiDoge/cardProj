@@ -1,6 +1,8 @@
 # cardProj - Isaiah Andrews
 
-![demo-gif](https://raw.githubusercontent.com/SemiDoge/cardProj/main/res/demoGIF.gif)
+<center>
+    <img src="https://raw.githubusercontent.com/SemiDoge/cardProj/main/res/demoGIF.gif">
+</center>
 
 ## About
 
