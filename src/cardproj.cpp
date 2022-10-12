@@ -8,12 +8,6 @@ CPWindow::CPWindow(int iWindowWidth, int iWindowHeight) {
     this->iWindowHeight = iWindowHeight;
 }
 
-CPWindow::~CPWindow() {
-    for (auto itr : vecEntities) {
-        delete itr;
-    }
-}
-
 int CPWindow::OnExecute() {
     if(OnInit() == false) {
         return EXIT_FAILURE;
@@ -22,17 +16,17 @@ int CPWindow::OnExecute() {
     //Initial entities drawn to screen
 
     vecEntities.push_back(
-        new Entity("entyCardStack", TextureManager::LoadTexture("res/cardStack.png", sdlRenderer), 
+        std::make_shared<Entity>("entyCardStack", TextureManager::LoadTexture("res/cardStack.png", sdlRenderer), 
             32, 32, 32 - 12, 32 + 42, 14, true)
     );
 
     vecEntities.push_back(
-        new Entity("entyFirstCard", TextureManager::LoadTexture("res/cardFront.png", sdlRenderer),
+        std::make_shared<Entity>("entyFirstCard", TextureManager::LoadTexture("res/cardFront.png", sdlRenderer),
             32, 32, 32 + (12 * 35), 32 + 42, 14, false)
     );
     
     vecEntities.push_back(
-        new Entity("entySecondCard", TextureManager::LoadTexture("res/cardFront.png", sdlRenderer),
+        std::make_shared<Entity>("entySecondCard", TextureManager::LoadTexture("res/cardFront.png", sdlRenderer),
             32, 32, 32 + (12 * 65), 32 + 42, 14, false)
     );
 
@@ -168,12 +162,12 @@ void CPWindow::DrawRandomCards() {
     card2.sdlTexture = TextureManager::LoadTexture(GenerateResourceLocation(card2).c_str(), sdlRenderer);
 
     vecEntities.push_back(
-        new Entity(fmt::format("entyCard{}{}", (int)card1.face, (int)card1.suit), card1.sdlTexture,
+        std::make_shared<Entity>(fmt::format("entyCard{}{}", (int)card1.face, (int)card1.suit), card1.sdlTexture,
             32, 32, 32 + (12 * 35), 32 + 42, 14, false)
     );
     
     vecEntities.push_back(
-        new Entity(fmt::format("entyCard{}{}", (int)card2.face, (int)card2.suit), card2.sdlTexture,
+        std::make_shared<Entity>(fmt::format("entyCard{}{}", (int)card2.face, (int)card2.suit), card2.sdlTexture,
             32, 32, 32 + (12 * 65), 32 + 42, 14, false)
     );
 }

@@ -44,7 +44,7 @@ private:
     SDL_Window * sdlWindow;
     SDL_Renderer * sdlRenderer;
 
-    std::vector<Entity *> vecEntities;
+    std::vector<std::shared_ptr<Entity>> vecEntities;
     
 
 public:
@@ -52,7 +52,7 @@ public:
 
 public:
     CPWindow(int iWindowWidth, int iWindowHeight);
-    ~CPWindow();
+    ~CPWindow() = default;
     int OnExecute();
 
 public:

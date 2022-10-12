@@ -18,6 +18,7 @@ int main (int argc, char** argv) {
     Logger::log("Starting SDL object...", logSeverity::INFO);
     auto ret = appWindow.OnExecute();
     
+    
     Logger::log(fmt::format("OnExecute() returned {} at frame#{}", ret, appWindow.iFrame), logSeverity::INFO);
     return ret;
 }
