@@ -66,7 +66,6 @@ public:
 public:
     void DrawRandomCards();
     SDL_Rect GenerateSubTexture(faces face, suits suit);
-    std::string GenerateResourceLocation(playingCard card);
 };
 
 #endif
