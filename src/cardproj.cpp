@@ -1,9 +1,7 @@
 #include "../inc/cardproj.h"
+#include "../inc/defines.h"
 
 CPWindow::CPWindow(int iWindowWidth, int iWindowHeight) {
-    sdlWindow = nullptr;
-    sdlRenderer = nullptr;
-
     this->iWindowWidth = iWindowWidth;
     this->iWindowHeight = iWindowHeight;
 }
@@ -12,22 +10,29 @@ int CPWindow::OnExecute() {
     if(OnInit() == false) {
         return EXIT_FAILURE;
     }
+
+    //Load texture atlas into memory
+
+    sdlTextureCardAtlas = TextureManager::LoadTexture("res/cardsTextureAtlas.png", sdlRenderer);
     
     //Initial entities drawn to screen
 
+    SDL_Rect stackAtlasPos = {x: 63, y: 120};
+    SDL_Rect stackBlankPos = {x: 42, y: 120};
+
     vecEntities.push_back(
-        std::make_shared<Entity>("entyCardStack", TextureManager::LoadTexture("res/cardStack.png", sdlRenderer), 
-            32, 32, 32 - 12, 32 + 42, 14, true)
+        std::make_shared<Entity>("entyCardStack", sdlTextureCardAtlas, &stackAtlasPos, 
+            SRC_CARD_STACK_WIDTH, SRC_CARD_HEIGHT, 32 + 12, 32 + 42, GLOBAL_SCALE, true)
     );
 
     vecEntities.push_back(
-        std::make_shared<Entity>("entyFirstCard", TextureManager::LoadTexture("res/cardFront.png", sdlRenderer),
-            32, 32, 32 + (12 * 35), 32 + 42, 14, false)
+        std::make_shared<Entity>("entyFirstCard", sdlTextureCardAtlas, &stackBlankPos,
+            SRC_CARD_WIDTH, SRC_CARD_HEIGHT, 32 + (12 * 38), 32 + 42, GLOBAL_SCALE, false)
     );
     
     vecEntities.push_back(
-        std::make_shared<Entity>("entySecondCard", TextureManager::LoadTexture("res/cardFront.png", sdlRenderer),
-            32, 32, 32 + (12 * 65), 32 + 42, 14, false)
+        std::make_shared<Entity>("entySecondCard", sdlTextureCardAtlas, &stackBlankPos,
+            SRC_CARD_WIDTH, SRC_CARD_HEIGHT, 32 + (12 * 68), 32 + 42, GLOBAL_SCALE, false)
     );
 
     SDL_Event Event;
@@ -125,7 +130,7 @@ void CPWindow::OnRender() {
 
     //prepare next frame
     for(auto itr : vecEntities) {
-        SDL_RenderCopy(sdlRenderer, itr->GetTexture(), NULL, itr->GetDestRect());
+        SDL_RenderCopy(sdlRenderer, sdlTextureCardAtlas, itr->GetSrcRect(), itr->GetDestRect());
     }
 
     //present new frame
@@ -134,6 +139,8 @@ void CPWindow::OnRender() {
 
 void CPWindow::OnCleanup() {
     Logger::log("Starting SDL cleanup...", logSeverity::INFO);
+    SDL_DestroyTexture(sdlTextureCardAtlas);
+    Logger::log("Destroyed Atlas Texture.", logSeverity::INFO);
     SDL_DestroyWindow(sdlWindow);
     SDL_Quit();
 }
@@ -142,7 +149,7 @@ void CPWindow::DrawRandomCards() {
     playingCard card1, card2;
 
     //remove last set of randomised playing cards
-    for (size_t i = 1; i < vecEntities.size(); i++) {
+    for (size_t i = 1; i <= vecEntities.size(); i++) {
         vecEntities.pop_back();
     }
 
@@ -158,18 +165,102 @@ void CPWindow::DrawRandomCards() {
     card2.face = (faces) faceDist(gen);
     card2.suit = (suits) suitDist(gen);
 
-    card1.sdlTexture = TextureManager::LoadTexture(GenerateResourceLocation(card1).c_str(), sdlRenderer);
-    card2.sdlTexture = TextureManager::LoadTexture(GenerateResourceLocation(card2).c_str(), sdlRenderer);
+    //Generate the rect corresponding to the location of the card face in the texture atlas
+    SDL_Rect rec1 = GenerateSubTexture(card1.face, card1.suit);
+    SDL_Rect rec2 = GenerateSubTexture(card2.face, card2.suit);
 
     vecEntities.push_back(
-        std::make_shared<Entity>(fmt::format("entyCard{}{}", (int)card1.face, (int)card1.suit), card1.sdlTexture,
-            32, 32, 32 + (12 * 35), 32 + 42, 14, false)
+        std::make_shared<Entity>(fmt::format("entyCard{}{}", (int)card1.face, (int)card1.suit), sdlTextureCardAtlas, &rec1,
+            SRC_CARD_WIDTH, SRC_CARD_HEIGHT, 32 + (12 * 38), 32 + 42, GLOBAL_SCALE, false)
     );
     
     vecEntities.push_back(
-        std::make_shared<Entity>(fmt::format("entyCard{}{}", (int)card2.face, (int)card2.suit), card2.sdlTexture,
-            32, 32, 32 + (12 * 65), 32 + 42, 14, false)
+        std::make_shared<Entity>(fmt::format("entyCard{}{}", (int)card2.face, (int)card2.suit), sdlTextureCardAtlas, &rec2,
+            SRC_CARD_WIDTH, SRC_CARD_HEIGHT, 32 + (12 * 68), 32 + 42, GLOBAL_SCALE, false)
     );
+}
+
+SDL_Rect CPWindow::GenerateSubTexture(faces face, suits suit) {
+   int topLeftX = 0; 
+   int topLeftY = 0; 
+
+    switch (suit) {
+        case Club:
+            topLeftY = 90;
+            break;
+        case Diamond:
+            topLeftY = 60;
+            break;
+        case Heart:
+            topLeftY = 30;
+            break;
+        case Spade:
+            topLeftY = 0;
+            break;
+        default:
+            topLeftY = 120;
+   }
+
+    switch (face) {
+        case Ace:
+            topLeftX = 0;
+        break;
+
+        case Two:
+            topLeftX = 21;
+        break;
+
+        case Three:
+            topLeftX = 42;
+        break;
+
+        case Four:
+            topLeftX = 63;
+        break;
+
+        case Five:
+            topLeftX = 84;
+        break;
+
+        case Six:
+            topLeftX = 105;
+        break;
+
+        case Seven:
+            topLeftX = 126;
+        break;
+
+        case Eight:
+            topLeftX = 147;
+        break;
+
+        case Nine:
+            topLeftX = 168;
+        break;
+
+        case Ten:
+            topLeftX = 189;
+        break; 
+        
+        case Jack:
+            topLeftX = 210;
+        break;
+
+        case Queen:
+            topLeftX = 231;
+        break;
+
+        case King:
+            topLeftX = 252;
+        break;
+
+        default:
+            topLeftX = 42;
+    }
+
+    SDL_Rect r = {x: topLeftX, y: topLeftY};
+    return r;
+
 }
 
 std::string CPWindow::GenerateResourceLocation(playingCard card) {
@@ -193,8 +284,7 @@ std::string CPWindow::GenerateResourceLocation(playingCard card) {
             strSuit.append("Err");
     }
 
-    switch (card.face)
-    {
+    switch (card.face) {
         case Ace:
         strFace.append("Ace");
         break;

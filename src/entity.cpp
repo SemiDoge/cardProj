@@ -1,6 +1,6 @@
 #include "../inc/entity.h"
 
-Entity::Entity(std::string strEntityLabel, SDL_Texture * sdlTexture, int w, int h, int xPos, int yPos, int iScale, bool bIsClickable) {
+Entity::Entity(std::string strEntityLabel, SDL_Texture * sdlTexture, SDL_Rect * atlasLocRect, int w, int h, int xPos, int yPos, int iScale, bool bIsClickable) {
     iEntityScale = iScale;
     bEntityIsClickable = bIsClickable;
 
@@ -9,14 +9,19 @@ Entity::Entity(std::string strEntityLabel, SDL_Texture * sdlTexture, int w, int 
     sdlDestRect.x = xPos;
     sdlDestRect.y = yPos;
 
+    sdlSrcRect.w = w;
+    sdlSrcRect.h = h;
+    sdlSrcRect.x = atlasLocRect->x; 
+    sdlSrcRect.y = atlasLocRect->y;
+
     this->sdlTexture = sdlTexture;
     this->strEntityLabel = strEntityLabel;
+
     Logger::log(fmt::format("Creating Entity '{}' @ ({}, {}), scale: {}", this->strEntityLabel, sdlDestRect.x, sdlDestRect.y, iEntityScale), logSeverity::INFO);
 }
 
 Entity::~Entity() {
-   SDL_DestroyTexture(sdlTexture);
-   Logger::log(fmt::format("Destroying texture and Entity '{}' @ ({}, {}), scale: {}", strEntityLabel, sdlDestRect.x, sdlDestRect.y, iEntityScale), logSeverity::INFO);
+    Logger::log(fmt::format("Destroying Entity '{}' @ ({}, {}), scale: {}", strEntityLabel, sdlDestRect.x, sdlDestRect.y, iEntityScale), logSeverity::INFO);
 }
 
 bool Entity::GetIsClickable() {
@@ -24,6 +29,7 @@ bool Entity::GetIsClickable() {
 }
 
 bool Entity::WasClicked(SDL_Point pointClicked) {
+    //TODO: Investigate, the clickable area seems to be larger than it should be.
     if(SDL_PointInRect(&pointClicked, &sdlDestRect) == SDL_TRUE) {
         Logger::log(fmt::format("Entity '{}' clicked @ ({},{})", strEntityLabel, pointClicked.x, pointClicked.y), logSeverity::INFO);
         return true;
@@ -32,8 +38,16 @@ bool Entity::WasClicked(SDL_Point pointClicked) {
     return false;
 }
 
+std::string Entity::GetEntityLabel() {
+    return strEntityLabel;
+}
+
 SDL_Rect * Entity::GetDestRect() {
     return &sdlDestRect;
+}
+
+SDL_Rect * Entity::GetSrcRect() {
+    return &sdlSrcRect;
 }
 
 SDL_Texture * Entity::GetTexture() {

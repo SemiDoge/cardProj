@@ -26,7 +26,7 @@ enum suits {
 struct playingCard {
     faces face;
     suits suit;
-    SDL_Texture * sdlTexture = nullptr;
+    SDL_Rect * sdlSrcRect = nullptr;
 };
 
 class CPWindow {
@@ -41,8 +41,9 @@ private:
     
     Uint32 iFrameStart = 0;
 
-    SDL_Window * sdlWindow;
-    SDL_Renderer * sdlRenderer;
+    SDL_Window * sdlWindow = nullptr;
+    SDL_Renderer * sdlRenderer = nullptr;
+    SDL_Texture * sdlTextureCardAtlas = nullptr;
 
     std::vector<std::shared_ptr<Entity>> vecEntities;
     
@@ -64,6 +65,7 @@ public:
 
 public:
     void DrawRandomCards();
+    SDL_Rect GenerateSubTexture(faces face, suits suit);
     std::string GenerateResourceLocation(playingCard card);
 };
 
