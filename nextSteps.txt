@@ -1,4 +1,32 @@
-TODO: Change the texture loading system from individual files to a texture map.
+For texture map, the coord for the top left of the rows goes as follows:
+    x, 0    : Spade
+    x, 30   : Heart
+    x, 60   : Diamond
+    x, 30   : Club
+    x, 120  : Special
+
+For the columns:
+    0, y     : Ace
+    21, y    : Two
+    42, y    : Three
+    63, y    : Four
+    84, y    : Five
+    105, y   : Six
+    126, y   : Seven
+    147, y   : Eight
+    168, y   : Nine
+    189, y   : Ten 
+    210, y   : Jack
+    231, y   : Queen
+    252, y   : King
+
+For the specials:
+    0, 120  : Black Joker
+    21, 120 : Red Joker
+    42, 120 : Blank Card
+    63, 120 : Card Stack (Warning this card is wider)
+
+
 TODO: Add ability to click and drag cards (this should be done with via an offset).
 TODO: Add logic that will allow for the ability to display certain textures over/under others. Probably with a small unsigned integer counter. E.g. start at 0 (lowest) and higher numbers display over lower numbers 
 TODO: Create a proper card drawing system. Perhaps with an array of ints.
