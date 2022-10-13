@@ -101,6 +101,9 @@ void CPWindow::OnEvent(SDL_Event * event) {
             case SDLK_ESCAPE:
                 bRunning = false;
                 break;
+            case SDLK_RETURN:
+                DrawRandomCards();
+                break;
             
             default:
                 //keyboard sym default
