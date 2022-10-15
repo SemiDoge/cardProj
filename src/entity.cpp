@@ -1,16 +1,16 @@
 #include "../inc/entity.h"
 
-Entity::Entity(std::string strEntityLabel, SDL_Texture * sdlTexture, SDL_Rect * atlasLocRect, int w, int h, int xPos, int yPos, int iScale, bool bIsClickable) {
+Entity::Entity(std::string strEntityLabel, SDL_Texture * sdlTexture, SDL_Rect * atlasLocRect, SDL_Rect loc, int iScale, bool bIsClickable) {
     iEntityScale = iScale;
     bEntityIsClickable = bIsClickable;
 
-    sdlDestRect.w = w * iEntityScale;
-    sdlDestRect.h = h * iEntityScale;
-    sdlDestRect.x = xPos;
-    sdlDestRect.y = yPos;
+    sdlDestRect.w = loc.w * iEntityScale;
+    sdlDestRect.h = loc.h * iEntityScale;
+    sdlDestRect.x = loc.x;
+    sdlDestRect.y = loc.y;
 
-    sdlSrcRect.w = w;
-    sdlSrcRect.h = h;
+    sdlSrcRect.w = loc.w;
+    sdlSrcRect.h = loc.h;
     sdlSrcRect.x = atlasLocRect->x; 
     sdlSrcRect.y = atlasLocRect->y;
 

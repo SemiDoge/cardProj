@@ -22,17 +22,17 @@ int CPWindow::OnExecute() {
 
     vecEntities.push_back(
         std::make_shared<Entity>("entyCardStack", sdlTextureCardAtlas, &stackAtlasPos, 
-            SRC_CARD_STACK_WIDTH, SRC_CARD_HEIGHT, 32 + 12, 32 + 42, GLOBAL_SCALE, true)
+            SDL_Rect{x: 32 + 12, y: 32 + 42, w: SRC_CARD_STACK_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, true)
     );
 
     vecEntities.push_back(
-        std::make_shared<Entity>("entyFirstCard", sdlTextureCardAtlas, &stackBlankPos,
-            SRC_CARD_WIDTH, SRC_CARD_HEIGHT, 32 + (12 * 38), 32 + 42, GLOBAL_SCALE, false)
+        std::make_shared<Entity>("entyFirstCard", sdlTextureCardAtlas, &stackBlankPos, 
+            SDL_Rect{x: 32 + (12 * 38), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false)
     );
-    
+
     vecEntities.push_back(
-        std::make_shared<Entity>("entySecondCard", sdlTextureCardAtlas, &stackBlankPos,
-            SRC_CARD_WIDTH, SRC_CARD_HEIGHT, 32 + (12 * 68), 32 + 42, GLOBAL_SCALE, false)
+        std::make_shared<Entity>("entySecondCard", sdlTextureCardAtlas, &stackBlankPos, 
+            SDL_Rect{x: 32 + (12 * 68), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false)
     );
 
     SDL_Event Event;
@@ -143,7 +143,7 @@ void CPWindow::OnRender() {
 void CPWindow::OnCleanup() {
     Logger::log("Starting SDL cleanup...", logSeverity::INFO);
     SDL_DestroyTexture(sdlTextureCardAtlas);
-    Logger::log("Destroyed Atlas Texture.", logSeverity::INFO);
+    Logger::log("Freed Atlas Texture.", logSeverity::INFO);
     SDL_DestroyWindow(sdlWindow);
     SDL_Quit();
 }
@@ -171,16 +171,17 @@ void CPWindow::DrawRandomCards() {
     //Generate the rect corresponding to the location of the card face in the texture atlas
     SDL_Rect rec1 = GenerateSubTexture(card1.face, card1.suit);
     SDL_Rect rec2 = GenerateSubTexture(card2.face, card2.suit);
-
+    
     vecEntities.push_back(
-        std::make_shared<Entity>(fmt::format("entyCard{}{}", (int)card1.face, (int)card1.suit), sdlTextureCardAtlas, &rec1,
-            SRC_CARD_WIDTH, SRC_CARD_HEIGHT, 32 + (12 * 38), 32 + 42, GLOBAL_SCALE, false)
+        std::make_shared<Entity>(fmt::format("entyCard{}{}", (int)card1.face, (int)card1.suit), sdlTextureCardAtlas, &rec1, 
+            SDL_Rect{x: 32 + (12 * 38), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false)
     );
     
     vecEntities.push_back(
-        std::make_shared<Entity>(fmt::format("entyCard{}{}", (int)card2.face, (int)card2.suit), sdlTextureCardAtlas, &rec2,
-            SRC_CARD_WIDTH, SRC_CARD_HEIGHT, 32 + (12 * 68), 32 + 42, GLOBAL_SCALE, false)
+        std::make_shared<Entity>(fmt::format("entyCard{}{}", (int)card1.face, (int)card1.suit), sdlTextureCardAtlas, &rec1, 
+            SDL_Rect{x: 32 + (12 * 68), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false)
     );
+    
 }
 
 SDL_Rect CPWindow::GenerateSubTexture(faces face, suits suit) {

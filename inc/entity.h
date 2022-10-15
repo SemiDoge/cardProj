@@ -16,7 +16,7 @@ private:
     SDL_Texture * sdlTexture = nullptr;
 
 public:
-    Entity(std::string strEntityLabel, SDL_Texture * sdlTexture, SDL_Rect * atlasLocRect, int w, int h, int xPos, int yPos, int iScale, bool bIsClickable);
+    Entity(std::string strEntityLabel, SDL_Texture * sdlTexture, SDL_Rect * atlasLocRect, SDL_Rect loc, int iScale, bool bIsClickable);
     ~Entity();
 
 public:
