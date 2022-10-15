@@ -164,21 +164,23 @@ void CPWindow::DrawRandomCards() {
 
     card1.face = (faces) faceDist(gen);
     card1.suit = (suits) suitDist(gen);
+    card1.GenerateName();
 
     card2.face = (faces) faceDist(gen);
     card2.suit = (suits) suitDist(gen);
+    card2.GenerateName();
 
     //Generate the rect corresponding to the location of the card face in the texture atlas
     SDL_Rect rec1 = GenerateSubTexture(card1.face, card1.suit);
     SDL_Rect rec2 = GenerateSubTexture(card2.face, card2.suit);
     
     vecEntities.push_back(
-        std::make_shared<Entity>(fmt::format("entyCard{}{}", (int)card1.face, (int)card1.suit), sdlTextureCardAtlas, &rec1, 
+        std::make_shared<Entity>(fmt::format("entyCard{}", card1.name), sdlTextureCardAtlas, &rec1, 
             SDL_Rect{x: 32 + (12 * 38), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false)
     );
     
     vecEntities.push_back(
-        std::make_shared<Entity>(fmt::format("entyCard{}{}", (int)card1.face, (int)card1.suit), sdlTextureCardAtlas, &rec1, 
+        std::make_shared<Entity>(fmt::format("entyCard{}", card2.name), sdlTextureCardAtlas, &rec2, 
             SDL_Rect{x: 32 + (12 * 68), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false)
     );
     
