@@ -30,4 +30,6 @@ For the specials:
 TODO: Add ability to click and drag cards (this should be done with via an offset).
 TODO: Add logic that will allow for the ability to display certain textures over/under others. Probably with a small unsigned integer counter. E.g. start at 0 (lowest) and higher numbers display over lower numbers 
 TODO: Create a proper card drawing system. Perhaps with an array of ints.
-TODO: Decide if morphing cardProject into Solitaire is viable.
+
+CREATE A FEATURE BRANCH IF YOU WANT TO GO AHEAD AND DO THIS
+TODO: Decide if morphing cardProject into Solitaire is viable. NOTE^

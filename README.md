@@ -16,13 +16,19 @@ This project is a demonstration of C++ and SDL2. Clicking on the stack of cards 
 * Conan
 
 ## Download
-
-> $ git clone https://github.com/SemiDoge/cardProj.git
+```console
+$ git clone https://github.com/SemiDoge/cardProj.git
+```
 
 ## Build
 
-> $ ./build.sh
+```console
+$ ./build.sh
+```
 
 ## Run
 
-> $ ./run.sh
+```console
+$ ./run.sh
+```
+
