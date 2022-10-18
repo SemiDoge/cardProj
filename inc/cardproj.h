@@ -11,6 +11,20 @@
 #include "../inc/entity.h"
 #include "../inc/playingCard.h"
 
+struct mouseMeta {
+    bool lmbDown = false;
+    bool rmbDown = false;
+    SDL_Point pos{};
+    SDL_Point clickOffset{};
+
+    void ResetMouse() {
+        lmbDown = false;
+        rmbDown = false;
+        clickOffset.x = 0;
+        clickOffset.y = 0;
+    }
+};
+
 class CPWindow {
 private:
     bool bRunning;
@@ -26,8 +40,11 @@ private:
     SDL_Window * sdlWindow = nullptr;
     SDL_Renderer * sdlRenderer = nullptr;
     SDL_Texture * sdlTextureCardAtlas = nullptr;
+    mouseMeta mouse;
 
     std::vector<std::shared_ptr<Entity>> vecEntities;
+    std::shared_ptr<Entity> selectedEntity = nullptr;
+    SDL_Rect * priorDragPos = nullptr;
     
 
 public:

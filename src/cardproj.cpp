@@ -13,7 +13,7 @@ int CPWindow::OnExecute() {
 
     //Load texture atlas into memory
 
-    sdlTextureCardAtlas = TextureManager::LoadTexture("res/cardsTextureAtlas.png", sdlRenderer);
+    sdlTextureCardAtlas = TextureManager::LoadTexture("../../res/cardsTextureAtlas.png", sdlRenderer);
     
     //Initial entities drawn to screen
 
@@ -22,17 +22,17 @@ int CPWindow::OnExecute() {
 
     vecEntities.push_back(
         std::make_shared<Entity>("entyCardStack", sdlTextureCardAtlas, &stackAtlasPos, 
-            SDL_Rect{x: 32 + 12, y: 32 + 42, w: SRC_CARD_STACK_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, true)
+            SDL_Rect{x: 32 + 12, y: 32 + 42, w: SRC_CARD_STACK_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, true, false)
     );
 
     vecEntities.push_back(
-        std::make_shared<Entity>("entyFirstCard", sdlTextureCardAtlas, &stackBlankPos, 
-            SDL_Rect{x: 32 + (12 * 38), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false)
+        std::make_shared<Entity>("entyFirstBlankCard", sdlTextureCardAtlas, &stackBlankPos,
+            SDL_Rect{x: 32 + (12 * 38), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false, true)
     );
 
     vecEntities.push_back(
-        std::make_shared<Entity>("entySecondCard", sdlTextureCardAtlas, &stackBlankPos, 
-            SDL_Rect{x: 32 + (12 * 68), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false)
+        std::make_shared<Entity>("entySecondBlankCard", sdlTextureCardAtlas, &stackBlankPos,
+            SDL_Rect{x: 32 + (12 * 68), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false, true)
     );
 
     SDL_Event Event;
@@ -111,11 +111,47 @@ void CPWindow::OnEvent(SDL_Event * event) {
             }
         break;
         case SDL_MOUSEBUTTONDOWN:
-            for(auto itr : vecEntities) {
-                if(itr->GetIsClickable() == true && itr->WasClicked(SDL_Point{event->button.x, event->button.y})) {
-                    DrawRandomCards();
-                    break;
+            if (!mouse.lmbDown && event->button.button == SDL_BUTTON_LEFT) {
+                mouse.lmbDown = true;
+
+                for (auto itr : vecEntities) {
+                    if (itr->WasClicked(mouse.pos)) {
+                        selectedEntity = itr;
+                        //Logger::log(fmt::format("{}", selectedEntity->DisplayString()), logSeverity::DEBUG);
+
+                        if(selectedEntity->GetIsClickable()) {
+                            DrawRandomCards();
+                        } else if (selectedEntity->GetIsDragable()) {
+                            mouse.clickOffset.x = mouse.pos.x - selectedEntity->GetDestRect()->x;
+                            mouse.clickOffset.y = mouse.pos.y - selectedEntity->GetDestRect()->y;
+                        } else {
+                            selectedEntity = nullptr;
+                            itr->DisplayString();
+                        }
+
+                        break;
+                    }
                 }
+            }
+
+            break;
+        case SDL_MOUSEMOTION:
+            mouse.pos = {event->motion.x, event->motion.y};
+
+            if (mouse.lmbDown && selectedEntity != nullptr && selectedEntity->GetIsDragable()) {
+                priorDragPos = selectedEntity->GetDestRect();
+                selectedEntity->SetDestRectXY(mouse.pos.x - mouse.clickOffset.x, mouse.pos.y - mouse.clickOffset.y);
+            }
+
+            break;
+        case SDL_MOUSEBUTTONUP:
+            Logger::log(fmt::format("{}", selectedEntity->DisplayString()), logSeverity::DEBUG);
+            if (selectedEntity != nullptr) {
+                if (selectedEntity->GetIsDragable()) {
+                    selectedEntity->SetDestRect(*priorDragPos);
+                }
+                selectedEntity = nullptr;
+                mouse.ResetMouse();
             }
             break;
         default:
@@ -176,12 +212,12 @@ void CPWindow::DrawRandomCards() {
     
     vecEntities.push_back(
         std::make_shared<Entity>(fmt::format("entyCard{}", card1.name), sdlTextureCardAtlas, &rec1, 
-            SDL_Rect{x: 32 + (12 * 38), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false)
+            SDL_Rect{x: 32 + (12 * 38), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false, true)
     );
     
     vecEntities.push_back(
         std::make_shared<Entity>(fmt::format("entyCard{}", card2.name), sdlTextureCardAtlas, &rec2, 
-            SDL_Rect{x: 32 + (12 * 68), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false)
+            SDL_Rect{x: 32 + (12 * 68), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false, true)
     );
     
 }
