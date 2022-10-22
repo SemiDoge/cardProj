@@ -127,13 +127,13 @@ void CPWindow::OnEvent(SDL_Event * event) {
                             mouse.clickOffset.y = mouse.pos.y - selectedEntity->GetDestRect()->y;
                         } else {
                             selectedEntity = nullptr;
-                            //itr->DisplayString();
                         }
 
                         break;
                     }
                 }
             }
+
 
             break;
         case SDL_MOUSEMOTION:
@@ -149,11 +149,6 @@ void CPWindow::OnEvent(SDL_Event * event) {
             //Logger::log(fmt::format("{}", selectedEntity->DisplayString()), logSeverity::DEBUG);
             mouse.lmbDown = false;
             if (selectedEntity != nullptr) {
-                if (selectedEntity->GetIsDragable() && priorDragPos != nullptr) {
-                    if(priorDragPos->x < iWindowWidth && priorDragPos->y < iWindowHeight) {
-                        selectedEntity->SetDestRect(*priorDragPos);
-                    }
-                }
                 selectedEntity = nullptr;
                 mouse.ResetMouse();
             }
