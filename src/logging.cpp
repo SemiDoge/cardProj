@@ -1,8 +1,8 @@
-#include "../inc/logging.h"
+#include "../inc/logging.hpp"
 
 void Logger::log(std::string msg, logSeverity severity) {
     fmt::v9::text_style style;
-    std::string logPrefix = "";
+    std::string logPrefix;
 
     switch (severity) {
         case logSeverity::ERROR:
@@ -23,7 +23,7 @@ void Logger::log(std::string msg, logSeverity severity) {
         break;
     }
 
-    if (bAllowedToPrint == true) {
+    if (bAllowedToPrint) {
         fmt::print("{} {}\n", fmt::styled(logPrefix, style), msg);
     }
 }

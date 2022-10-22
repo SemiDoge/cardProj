@@ -1,8 +1,11 @@
-#include "../inc/entity.h"
+#include <utility>
 
-Entity::Entity(std::string strEntityLabel, SDL_Texture * sdlTexture, SDL_Rect * atlasLocRect, SDL_Rect loc, int iScale, bool bIsClickable) {
+#include "../inc/entity.hpp"
+
+Entity::Entity(std::string strEntityLabel, SDL_Texture * sdlTexture, SDL_Rect * atlasLocRect, SDL_Rect loc, int iScale, bool isClickable, bool isDragable) {
     iEntityScale = iScale;
-    bEntityIsClickable = bIsClickable;
+    bEntityIsClickable = isClickable;
+    bEntityIsDragable = isDragable;
 
     sdlDestRect.w = loc.w * iEntityScale;
     sdlDestRect.h = loc.h * iEntityScale;
@@ -15,7 +18,7 @@ Entity::Entity(std::string strEntityLabel, SDL_Texture * sdlTexture, SDL_Rect * 
     sdlSrcRect.y = atlasLocRect->y;
 
     this->sdlTexture = sdlTexture;
-    this->strEntityLabel = strEntityLabel;
+    this->strEntityLabel = std::move(strEntityLabel);
 
     Logger::log(fmt::format("Creating Entity '{}' @ ({}, {}), scale: {}", this->strEntityLabel, sdlDestRect.x, sdlDestRect.y, iEntityScale), logSeverity::INFO);
 }
@@ -24,8 +27,13 @@ Entity::~Entity() {
     Logger::log(fmt::format("Destroying Entity '{}' @ ({}, {}), scale: {}", strEntityLabel, sdlDestRect.x, sdlDestRect.y, iEntityScale), logSeverity::INFO);
 }
 
-bool Entity::GetIsClickable() {
+bool Entity::GetIsClickable() const {
     return bEntityIsClickable;
+}
+
+
+bool Entity::GetIsDragable() const {
+    return bEntityIsDragable;
 }
 
 bool Entity::WasClicked(SDL_Point pointClicked) {
@@ -38,7 +46,7 @@ bool Entity::WasClicked(SDL_Point pointClicked) {
     return false;
 }
 
-std::string Entity::GetEntityLabel() {
+[[maybe_unused]] std::string Entity::GetEntityLabel() {
     return strEntityLabel;
 }
 
@@ -50,8 +58,18 @@ SDL_Rect * Entity::GetSrcRect() {
     return &sdlSrcRect;
 }
 
-SDL_Texture * Entity::GetTexture() {
+SDL_Texture * Entity::GetTexture() const {
     return sdlTexture;
+}
+
+[[maybe_unused]] std::string Entity::DisplayString() {
+    std::string retString;
+
+    return fmt::format(
+        "{} {{\n\t\tEntityScale: {}\n\t\tIsClickable: {}\n\t\tIsDragable: {}\n\t\tsdlDestRect {{\n\t\t\tx: {}, y: {}\n\t\t\tw: {}, h: {}\n\t\t}}", strEntityLabel, 
+                iEntityScale, bEntityIsClickable, bEntityIsDragable,
+                sdlDestRect.x, sdlDestRect.y, sdlDestRect.w, sdlDestRect.h
+    );
 }
 
 void Entity::SetDestRect(SDL_Rect destRect) {
@@ -59,4 +77,9 @@ void Entity::SetDestRect(SDL_Rect destRect) {
     sdlDestRect.h = destRect.h;
     sdlDestRect.x = destRect.x;
     sdlDestRect.y = destRect.y;
+}
+
+void Entity::SetDestRectXY(int x, int y)  {
+    sdlDestRect.x = x;
+    sdlDestRect.y = y;
 }

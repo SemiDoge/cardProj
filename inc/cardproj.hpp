@@ -7,17 +7,31 @@
 #include <vector>
 #include <random>
 
-#include "../inc/textureManager.h"
-#include "../inc/entity.h"
-#include "../inc/playingCard.h"
+#include "../inc/textureManager.hpp"
+#include "../inc/entity.hpp"
+#include "../inc/playingCard.hpp"
+
+struct mouseMeta {
+    bool lmbDown = false;
+    bool rmbDown = false;
+    SDL_Point pos{};
+    SDL_Point clickOffset{};
+
+    void ResetMouse() {
+        lmbDown = false;
+        rmbDown = false;
+        clickOffset.x = 0;
+        clickOffset.y = 0;
+    }
+};
 
 class CPWindow {
 private:
-    bool bRunning;
+    bool bRunning{};
 
     int iWindowWidth = 0;
     int iWindowHeight = 0;
-    int iFrameTime = 0;
+    unsigned int iFrameTime = 0;
     const int iTargetFPS = 60;
     const int iFrameDelay = 1000 / iTargetFPS;
     
@@ -26,8 +40,11 @@ private:
     SDL_Window * sdlWindow = nullptr;
     SDL_Renderer * sdlRenderer = nullptr;
     SDL_Texture * sdlTextureCardAtlas = nullptr;
+    mouseMeta mouse;
 
     std::vector<std::shared_ptr<Entity>> vecEntities;
+    std::shared_ptr<Entity> selectedEntity = nullptr;
+    SDL_Rect * priorDragPos = nullptr;
     
 
 public:
@@ -47,7 +64,7 @@ public:
 
 public:
     void DrawRandomCards();
-    SDL_Rect GenerateSubTexture(faces face, suits suit);
+    static SDL_Rect GenerateSubTexture(faces face, suits suit);
 };
 
 #endif

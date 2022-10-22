@@ -3,5 +3,5 @@
 mkdir -p build/
 cd build
 conan install .. --build missing
-cmake -S ../src/ -B .
+cmake -S ../ -B .
 make
