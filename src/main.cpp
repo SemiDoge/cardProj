@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cxxopts.hpp>
 
-#include "../inc/cardproj.h"
+#include "../inc/cardproj.hpp"
 
 void printVersion();
 cxxopts::ParseResult setUpWorkflow(int argc, char** argv, cxxopts::Options & options);
