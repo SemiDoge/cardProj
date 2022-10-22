@@ -1,5 +1,5 @@
-#include "../inc/cardproj.h"
-#include "../inc/defines.h"
+#include "../inc/cardproj.hpp"
+#include "../inc/defines.hpp"
 
 CPWindow::CPWindow(int iWindowWidth, int iWindowHeight) {
     this->iWindowWidth = iWindowWidth;
@@ -7,21 +7,21 @@ CPWindow::CPWindow(int iWindowWidth, int iWindowHeight) {
 }
 
 int CPWindow::OnExecute() {
-    if(OnInit() == false) {
+    if(!OnInit()) {
         return EXIT_FAILURE;
     }
 
     //Load texture atlas into memory
 
-    sdlTextureCardAtlas = TextureManager::LoadTexture("../../res/cardsTextureAtlas.png", sdlRenderer);
+    sdlTextureCardAtlas = TextureManager::LoadTexture("res/cardsTextureAtlas.png", sdlRenderer);
     
     //Initial entities drawn to screen
 
-    SDL_Rect stackAtlasPos = {x: 63, y: 120};
+    SDL_Rect stackAtlasPos = {x: 84, y: 120};
     SDL_Rect stackBlankPos = {x: 42, y: 120};
 
     vecEntities.push_back(
-        std::make_shared<Entity>("entyCardStack", sdlTextureCardAtlas, &stackAtlasPos, 
+        std::make_shared<Entity>("entyCardStack", sdlTextureCardAtlas, &stackAtlasPos,
             SDL_Rect{x: 32 + 12, y: 32 + 42, w: SRC_CARD_STACK_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, true, false)
     );
 
@@ -71,13 +71,14 @@ bool CPWindow::OnInit() {
 
     Logger::log("Successful SDL_Image Initialization!", logSeverity::INFO);
 
-    if ((sdlWindow = SDL_CreateWindow("Card Project", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, iWindowWidth, iWindowHeight, SDL_WINDOW_OPENGL)) == NULL) {
+    if ((sdlWindow = SDL_CreateWindow("Card Project", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                                      iWindowWidth, iWindowHeight, SDL_WINDOW_OPENGL)) == nullptr) {
         return false;
     }
 
     Logger::log(fmt::format("Created a {}x{} SDL_Window", iWindowWidth, iWindowHeight), logSeverity::INFO);
 
-    if ((sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, 0)) == NULL) {
+    if ((sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, 0)) == nullptr) {
         return false;
     }
 
@@ -114,7 +115,7 @@ void CPWindow::OnEvent(SDL_Event * event) {
             if (!mouse.lmbDown && event->button.button == SDL_BUTTON_LEFT) {
                 mouse.lmbDown = true;
 
-                for (auto itr : vecEntities) {
+                for (const auto& itr : vecEntities) {
                     if (itr->WasClicked(mouse.pos)) {
                         selectedEntity = itr;
                         //Logger::log(fmt::format("{}", selectedEntity->DisplayString()), logSeverity::DEBUG);
@@ -126,7 +127,7 @@ void CPWindow::OnEvent(SDL_Event * event) {
                             mouse.clickOffset.y = mouse.pos.y - selectedEntity->GetDestRect()->y;
                         } else {
                             selectedEntity = nullptr;
-                            itr->DisplayString();
+                            //itr->DisplayString();
                         }
 
                         break;
@@ -145,10 +146,13 @@ void CPWindow::OnEvent(SDL_Event * event) {
 
             break;
         case SDL_MOUSEBUTTONUP:
-            Logger::log(fmt::format("{}", selectedEntity->DisplayString()), logSeverity::DEBUG);
+            //Logger::log(fmt::format("{}", selectedEntity->DisplayString()), logSeverity::DEBUG);
+            mouse.lmbDown = false;
             if (selectedEntity != nullptr) {
-                if (selectedEntity->GetIsDragable()) {
-                    selectedEntity->SetDestRect(*priorDragPos);
+                if (selectedEntity->GetIsDragable() && priorDragPos != nullptr) {
+                    if(priorDragPos->x < iWindowWidth && priorDragPos->y < iWindowHeight) {
+                        selectedEntity->SetDestRect(*priorDragPos);
+                    }
                 }
                 selectedEntity = nullptr;
                 mouse.ResetMouse();
@@ -168,8 +172,8 @@ void CPWindow::OnRender() {
     SDL_RenderClear(sdlRenderer); //clear the previous frame
 
     //prepare next frame
-    for(auto itr : vecEntities) {
-        SDL_RenderCopy(sdlRenderer, sdlTextureCardAtlas, itr->GetSrcRect(), itr->GetDestRect());
+    for(const auto& itr : vecEntities) {
+        SDL_RenderCopy(sdlRenderer, itr->GetTexture(), itr->GetSrcRect(), itr->GetDestRect());
     }
 
     //present new frame
@@ -223,8 +227,8 @@ void CPWindow::DrawRandomCards() {
 }
 
 SDL_Rect CPWindow::GenerateSubTexture(faces face, suits suit) {
-   int topLeftX = 0; 
-   int topLeftY = 0; 
+   int topLeftX;
+   int topLeftY;
 
     switch (suit) {
         case Club:
