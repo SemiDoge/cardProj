@@ -20,7 +20,7 @@ jobs:
     - name: Install Reqs
       run: |
         sudo apt-get update -y -qq
-        sudo apt-get install -y -qq libegl1-mesa libegl1-mesa-dev libsdl2-dev
+        sudo apt-get install -y -qq libegl1-mesa libegl1-mesa-dev libsdl2-dev libsdl2-image-dev
 
     - name: Install Conan
       id: conan
