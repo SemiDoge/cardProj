@@ -22,7 +22,7 @@ jobs:
       uses: turtlebrowser/get-conan@main
 
     - name: Configure Conan
-      run: mkdir -p ${{github.workspace}}/build && conan install .. --build missing
+      run: mkdir -p ${{github.workspace}}/build && cd ${{github.workspace}}/build && conan install .. --build missing
     
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
@@ -34,3 +34,4 @@ jobs:
 #      working-directory: ${{github.workspace}}/build
 #      run: ctest -C ${{env.BUILD_TYPE}}
       
+
