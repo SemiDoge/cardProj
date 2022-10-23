@@ -19,6 +19,7 @@ jobs:
     
     - name: Install Reqs
       run: |
+        export CONAN_SYSREQUIRES_MODE=enabled 
         sudo apt-get update -y -qq
         sudo apt-get install -y -qq libegl1-mesa libegl1-mesa-dev xorg openbox libsdl2-dev
 
@@ -41,4 +42,3 @@ jobs:
 #    - name: Test
 #      working-directory: ${{github.workspace}}/build
 #      run: ctest -C ${{env.BUILD_TYPE}}
-      
