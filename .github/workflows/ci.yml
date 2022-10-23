@@ -19,16 +19,26 @@ jobs:
     
     - name: Install Reqs
       run: |
-        export CONAN_SYSREQUIRES_MODE=enabled 
         sudo apt-get update -y -qq
-        sudo apt-get install -y -qq libegl1-mesa libegl1-mesa-dev xorg openbox libsdl2-dev
+        sudo apt-get install -y -qq libegl1-mesa libegl1-mesa-dev
 
     - name: Install Conan
       id: conan
       uses: turtlebrowser/get-conan@main
 
     - name: Configure Conan New Profile
-      run: conan profile new default --detect && conan profile update settings.compiler.libcxx=libstdc++11 default && conan profile update conf.tools.system.package_manager:mode=install default 
+      run: | 
+      export CONAN_USER_HOME="/tmp/conan"
+      conan profile new default --detect
+      conan profile update settings.compiler.libcxx=libstdc++11 default
+      conan profile update conf.tools.system.package_manager:mode=install default 
+      conan profile update conf.tools.system.package_manager:sudo=True default 
+
+    - name: More Conan Config
+      run: | 
+      export CONAN_SYSREQUIRES_MODE="enabled"
+      export CONAN_SYSREQUIRES_SUDO="1"
+      conan remove --system-reqs "*"
     
     - name: Configure Conan Install
       run: mkdir -p ${{github.workspace}}/build && cd ${{github.workspace}}/build && conan install .. --build missing
