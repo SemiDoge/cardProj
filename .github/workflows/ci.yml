@@ -30,7 +30,7 @@ jobs:
       run: export CONAN_USER_HOME="/tmp/conan" && conan profile new default --detect && conan profile update settings.compiler.libcxx=libstdc++11 default && conan profile update conf.tools.system.package_manager:mode=install default && conan profile update conf.tools.system.package_manager:sudo=True default && export CONAN_SYSREQUIRES_MODE="enabled" && export CONAN_SYSREQUIRES_SUDO="1" && conan remove --system-reqs "*"
     
     - name: Configure Conan Install
-      run: mkdir -p ${{github.workspace}}/build && cd ${{github.workspace}}/build && conan install .. --build missing
+      run: conan profile show default && mkdir -p ${{github.workspace}}/build && cd ${{github.workspace}}/build && conan install .. --build missing
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
