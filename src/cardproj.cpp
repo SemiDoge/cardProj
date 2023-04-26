@@ -12,6 +12,12 @@ int CPWindow::OnExecute() {
         return EXIT_FAILURE;
     }
 
+    //Set window icon
+
+    SDL_Surface * icon = IMG_Load("res/cardStack.png");
+    SDL_SetWindowIcon(sdlWindow, icon);
+    SDL_FreeSurface(icon);
+
     //Load texture atlas into memory
 
     sdlTextureCardAtlas = TextureManager::LoadTexture("res/cardsTextureAtlas.png", sdlRenderer);
