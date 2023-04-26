@@ -2,10 +2,10 @@
 
 #include "../inc/entity.hpp"
 
-Entity::Entity(std::string strEntityLabel, SDL_Texture * sdlTexture, SDL_Rect * atlasLocRect, SDL_Rect loc, int iScale, bool isClickable, bool isDragable) {
+Entity::Entity(std::string strEntityLabel, SDL_Texture * sdlTexture, SDL_Rect * atlasLocRect, SDL_Rect loc, int iScale, bool isClickable, bool isDraggable, Uint8 zidx) {
     iEntityScale = iScale;
     bEntityIsClickable = isClickable;
-    bEntityIsDragable = isDragable;
+    bEntityIsDraggable = isDraggable;
 
     sdlDestRect.w = loc.w * iEntityScale;
     sdlDestRect.h = loc.h * iEntityScale;
@@ -17,6 +17,7 @@ Entity::Entity(std::string strEntityLabel, SDL_Texture * sdlTexture, SDL_Rect * 
     sdlSrcRect.x = atlasLocRect->x; 
     sdlSrcRect.y = atlasLocRect->y;
 
+    this->zidx = zidx;
     this->sdlTexture = sdlTexture;
     this->strEntityLabel = std::move(strEntityLabel);
 
@@ -32,8 +33,8 @@ bool Entity::GetIsClickable() const {
 }
 
 
-bool Entity::GetIsDragable() const {
-    return bEntityIsDragable;
+bool Entity::GetIsDraggable() const {
+    return bEntityIsDraggable;
 }
 
 bool Entity::WasClicked(SDL_Point pointClicked) {
@@ -44,6 +45,10 @@ bool Entity::WasClicked(SDL_Point pointClicked) {
     }
 
     return false;
+}
+
+Uint8 Entity::GetZIndex() const {
+    return zidx;
 }
 
 [[maybe_unused]] std::string Entity::GetEntityLabel() {
@@ -66,8 +71,8 @@ SDL_Texture * Entity::GetTexture() const {
     std::string retString;
 
     return fmt::format(
-        "{} {{\n\t\tEntityScale: {}\n\t\tIsClickable: {}\n\t\tIsDragable: {}\n\t\tsdlDestRect {{\n\t\t\tx: {}, y: {}\n\t\t\tw: {}, h: {}\n\t\t}}", strEntityLabel, 
-                iEntityScale, bEntityIsClickable, bEntityIsDragable,
+        "{} {{\n\t\tEntityScale: {}\n\t\tIsClickable: {}\n\t\tIsDraggable: {}\n\t\tsdlDestRect {{\n\t\t\tx: {}, y: {}\n\t\t\tw: {}, h: {}\n\t\t}}", strEntityLabel, 
+                iEntityScale, bEntityIsClickable, bEntityIsDraggable,
                 sdlDestRect.x, sdlDestRect.y, sdlDestRect.w, sdlDestRect.h
     );
 }
@@ -82,4 +87,8 @@ void Entity::SetDestRect(SDL_Rect destRect) {
 void Entity::SetDestRectXY(int x, int y)  {
     sdlDestRect.x = x;
     sdlDestRect.y = y;
+}
+
+void Entity::SetZIndex(Uint8 z) {
+    this->zidx = z;
 }

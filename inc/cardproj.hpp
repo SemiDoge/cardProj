@@ -44,6 +44,7 @@ private:
 
     std::vector<std::shared_ptr<Entity>> vecEntities;
     std::shared_ptr<Entity> selectedEntity = nullptr;
+    Uint8 selectedEntityOldZ{};
     SDL_Rect * priorDragPos = nullptr;
     
 

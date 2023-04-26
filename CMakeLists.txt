@@ -10,7 +10,9 @@ endif()
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(SOURCES src/main.cpp src/cardproj.cpp src/entity.cpp src/textureManager.cpp src/logging.cpp)
+set(SOURCES src/main.cpp src/cardproj.cpp src/entity.cpp src/textureManager.cpp src/logging.cpp src/zsorting.cpp)
+
+add_compile_options(-Wall -Wextra -Wpedantic)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC ../inc/)

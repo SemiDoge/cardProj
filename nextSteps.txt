@@ -26,9 +26,6 @@ For the specials:
     42, 120 : Blank Card
     63, 120 : Card Stack (Warning this card is wider)
 
-
-TODO: Add ability to click and drag cards (this should be done with via an offset).
-TODO: Add logic that will allow for the ability to display certain textures over/under others. Probably with a small unsigned integer counter. E.g. start at 0 (lowest) and higher numbers display over lower numbers 
 TODO: Create a proper card drawing system. Perhaps with an array of ints.
 
 CREATE A FEATURE BRANCH IF YOU WANT TO GO AHEAD AND DO THIS
