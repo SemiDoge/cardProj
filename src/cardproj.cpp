@@ -1,5 +1,6 @@
 #include "../inc/cardproj.hpp"
 #include "../inc/defines.hpp"
+#include "../inc/zsorting.hpp"
 
 CPWindow::CPWindow(int iWindowWidth, int iWindowHeight) {
     this->iWindowWidth = iWindowWidth;
@@ -17,22 +18,22 @@ int CPWindow::OnExecute() {
     
     //Initial entities drawn to screen
 
-    SDL_Rect stackAtlasPos = {x: 84, y: 120};
-    SDL_Rect stackBlankPos = {x: 42, y: 120};
+    SDL_Rect stackAtlasPos = {.x = 84, .y = 120, .w = 0, .h = 0};
+    SDL_Rect stackBlankPos = {.x = 42, .y = 120, .w = 0, .h = 0};
 
     vecEntities.push_back(
         std::make_shared<Entity>("entyCardStack", sdlTextureCardAtlas, &stackAtlasPos,
-            SDL_Rect{x: 32 + 12, y: 32 + 42, w: SRC_CARD_STACK_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, true, false)
+            SDL_Rect{.x = 32 + 12, .y = 32 + 42, .w = SRC_CARD_STACK_WIDTH, .h = SRC_CARD_HEIGHT}, GLOBAL_SCALE, true, false, 0)
     );
 
     vecEntities.push_back(
         std::make_shared<Entity>("entyFirstBlankCard", sdlTextureCardAtlas, &stackBlankPos,
-            SDL_Rect{x: 32 + (12 * 38), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false, true)
+            SDL_Rect{.x = 32 + (12 * 38), .y = 32 + 42, .w = SRC_CARD_WIDTH, .h = SRC_CARD_HEIGHT}, GLOBAL_SCALE, false, true, 1)
     );
 
     vecEntities.push_back(
         std::make_shared<Entity>("entySecondBlankCard", sdlTextureCardAtlas, &stackBlankPos,
-            SDL_Rect{x: 32 + (12 * 68), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false, true)
+            SDL_Rect{.x = 32 + (12 * 68), .y = 32 + 42, .w = SRC_CARD_WIDTH, .h = SRC_CARD_HEIGHT}, GLOBAL_SCALE, false, true, 1)
     );
 
     SDL_Event Event;
@@ -50,7 +51,7 @@ int CPWindow::OnExecute() {
     
         iFrameTime = SDL_GetTicks() - iFrameStart;
     
-        if (iFrameDelay > iFrameTime) {
+        if (iFrameDelay > (int) iFrameTime) {
             SDL_Delay(iFrameDelay - iFrameTime);
         }
     }
@@ -97,6 +98,7 @@ void CPWindow::OnEvent(SDL_Event * event) {
     switch(event->type) {
         case SDL_QUIT:
             bRunning = false;
+            break;
         case SDL_KEYUP:
             switch (event->key.keysym.sym) {
             case SDLK_ESCAPE:
@@ -118,15 +120,19 @@ void CPWindow::OnEvent(SDL_Event * event) {
                 for (const auto& itr : vecEntities) {
                     if (itr->WasClicked(mouse.pos)) {
                         selectedEntity = itr;
+                        selectedEntityOldZ = itr->GetZIndex();
                         //Logger::log(fmt::format("{}", selectedEntity->DisplayString()), logSeverity::DEBUG);
 
                         if(selectedEntity->GetIsClickable()) {
                             DrawRandomCards();
-                        } else if (selectedEntity->GetIsDragable()) {
+                        } else if (selectedEntity->GetIsDraggable()) {
+                            selectedEntity->SetZIndex(Z_INDEX_MAX);
+                            zidxSort(vecEntities);
                             mouse.clickOffset.x = mouse.pos.x - selectedEntity->GetDestRect()->x;
                             mouse.clickOffset.y = mouse.pos.y - selectedEntity->GetDestRect()->y;
                         } else {
                             selectedEntity = nullptr;
+                            selectedEntityOldZ = 0;
                         }
 
                         break;
@@ -139,7 +145,7 @@ void CPWindow::OnEvent(SDL_Event * event) {
         case SDL_MOUSEMOTION:
             mouse.pos = {event->motion.x, event->motion.y};
 
-            if (mouse.lmbDown && selectedEntity != nullptr && selectedEntity->GetIsDragable()) {
+            if (mouse.lmbDown && selectedEntity != nullptr && selectedEntity->GetIsDraggable()) {
                 priorDragPos = selectedEntity->GetDestRect();
                 selectedEntity->SetDestRectXY(mouse.pos.x - mouse.clickOffset.x, mouse.pos.y - mouse.clickOffset.y);
             }
@@ -149,6 +155,7 @@ void CPWindow::OnEvent(SDL_Event * event) {
             //Logger::log(fmt::format("{}", selectedEntity->DisplayString()), logSeverity::DEBUG);
             mouse.lmbDown = false;
             if (selectedEntity != nullptr) {
+                selectedEntity->SetZIndex(selectedEntityOldZ);
                 selectedEntity = nullptr;
                 mouse.ResetMouse();
             }
@@ -211,12 +218,12 @@ void CPWindow::DrawRandomCards() {
     
     vecEntities.push_back(
         std::make_shared<Entity>(fmt::format("entyCard{}", card1.name), sdlTextureCardAtlas, &rec1, 
-            SDL_Rect{x: 32 + (12 * 38), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false, true)
+            SDL_Rect{.x = 32 + (12 * 38), .y = 32 + 42, .w = SRC_CARD_WIDTH, .h = SRC_CARD_HEIGHT}, GLOBAL_SCALE, false, true, 1)
     );
     
     vecEntities.push_back(
         std::make_shared<Entity>(fmt::format("entyCard{}", card2.name), sdlTextureCardAtlas, &rec2, 
-            SDL_Rect{x: 32 + (12 * 68), y: 32 + 42, w: SRC_CARD_WIDTH, h: SRC_CARD_HEIGHT}, GLOBAL_SCALE, false, true)
+            SDL_Rect{.x = 32 + (12 * 68), .y = 32 + 42, .w = SRC_CARD_WIDTH, .h = SRC_CARD_HEIGHT}, GLOBAL_SCALE, false, true, 1)
     );
     
 }
@@ -299,7 +306,7 @@ SDL_Rect CPWindow::GenerateSubTexture(faces face, suits suit) {
             topLeftX = 42;
     }
 
-    SDL_Rect r = {x: topLeftX, y: topLeftY};
+    SDL_Rect r = {.x = topLeftX, .y = topLeftY, .w = 0, .h = 0};
     return r;
 
 }
