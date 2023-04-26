@@ -30,7 +30,7 @@ jobs:
       run: export CONAN_USER_HOME="/tmp/conan" && export CONAN_SYSREQUIRES_MODE="enabled" && export CONAN_SYSREQUIRES_SUDO="1" 
 
     - name: Configure Conan Profile
-      run: conan profile new default --detect && conan profile update settings.compiler.libcxx=libstdc++11 default && conan profile update conf.tools.system.package_manager:mode=install default && conan profile update conf.tools.system.package_manager:sudo=True default 
+      run: conan profile detect && conan profile update settings.compiler.libcxx=libstdc++11 default && conan profile update conf.tools.system.package_manager:mode=install default && conan profile update conf.tools.system.package_manager:sudo=True default 
 
     - name: More Conan Config
       run: conan remove --system-reqs "*"
