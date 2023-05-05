@@ -25,8 +25,3 @@ For the specials:
     21, 120 : Red Joker
     42, 120 : Blank Card
     63, 120 : Card Stack (Warning this card is wider)
-
-TODO: Create a proper card drawing system. Perhaps with an array of ints.
-
-CREATE A FEATURE BRANCH IF YOU WANT TO GO AHEAD AND DO THIS
-TODO: Decide if morphing cardProject into Solitaire is viable. NOTE^
